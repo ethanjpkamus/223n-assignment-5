@@ -1,0 +1,38 @@
+pseudocode
+
+HOW TO DETECT MOUSE CLICK
+(applex,appley)
+(mousex,mousey)
+
+bool caught = false;
+double dist;
+
+protected override void OnMouseDown(MouseEventsArgs e){
+// when the mouse is clicked, the computer will create an event that stores the
+// x and y coords of where the mouse was clicked on screen
+	mousex = e.X;
+	mousey = e.Y;
+	dist = (mousex - (apple + radius))^2 + (mousey - (apple+radius))^2;
+
+	if(dist^2 < radius^2 && apple > 800){
+	//check if the click is within the circle and if the apple is above the control area.
+		caught = true;
+	} else {
+		caught = false;
+	}
+
+	base.OnMouseDown(e);
+}
+
+protected override void OnPaint(PaintEventArgs e){
+
+	Graphics graph = e.Graphics;
+
+	if(!caught){
+		g.FillEllipse(Brushes.Red,8,8,applex,appley);
+		base.OnPaint(graph);
+	}
+
+}
+
+first start off with one apple on the screen at a time, then create more and more
