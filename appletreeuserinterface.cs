@@ -21,17 +21,19 @@ public class appletreeuserinterface : Form {
 	private const int MAXIMUM_FORM_WIDTH = 500;
 	private const int MAXIMUM_FORM_HEIGHT = 800;
 	private const int APPLE_RADIUS = 20;
-	private const int FORM_X_CENTER = (MAXIMUM_FORM_WIDTH / 2) - BALL_RADIUS;
-	private const int FORM_Y_CENTER = (MAXIMUM_FORM_HEIGHT / 2) - 50 - BALL_RADIUS;
 	private const int GREENTOP = 500; //y value
 
 	//variables
-	private int applex = 0;
-	private int appley = 0;
-	private int mousex = 0;
-	private int mousey = 0;
-
+	private int apple_x = 0;
+	private int apple_y = 0;
+	private int applecenter_x = 0;
+	private int applecenter_y = 0;
+	private int mouse_x = 0;
+	private int mouse_y = 0;
+	private int distance = 0;
 	private int apples_caught = 0;
+
+	private bool is_apple_caught = false;
 
 	//items to be used in the user interface
 	private Button start_button = new Button();
@@ -53,6 +55,8 @@ public class appletreeuserinterface : Form {
 		Text = "Apple Tree Game by: Ethan Kamus";
 
 		BackColor = Color.White;
+
+		DoubleBuffered = true;
 
 		ui_clock.Interval = 33.3; //30 Hz
 		ui_clock.Enabled = true;
@@ -87,6 +91,11 @@ public class appletreeuserinterface : Form {
 		apples_caught_label.ForeColor = Color.White;
 		apples_caught_label.BackColor = Color.Green;
 
+		Controls.Add(start_button);
+		Controls.Add(restart_button);
+		Conrtols.Add(quit_button);
+		Controls.Add(level_label);
+		Controls.Add(apples_caught_label);
 
 
 	} //end of constructor
@@ -98,13 +107,28 @@ public class appletreeuserinterface : Form {
 		graph.FillRectangle(Brushes.Green,0,GREENTOP,500,300);
 		graph.FillRectangle(Brushes.Cyan,0,0,500,500);
 
-		graph.FillEllipse(Brushes.Red,applex,appley,APPLE_RADIUS,APPLE_RADIUS);
+		graph.FillEllipse(Brushes.Red,apple_x,apple_y,APPLE_RADIUS,APPLE_RADIUS);
 
 		base.OnPaint(e);
 
 	} //end of OnPaint override
 
 	protected override void OnMouseDown(MouseEventsArgs e){
+		mouse_x = e.X;
+		mouse_y = e.Y;
+		distance = (mouse_x - (applecenter_x + radius*radius))
+		 	  + (mouse_y - (applecenter_y + radius*radius));
+
+		if(applecenter_y > (GREENTOP + APPLE_RADIUS*APPLE_RADIUS)
+		   && (distance*distance) < (radius*radius)){
+
+			apples_caught++;
+			is_apple_caught = true;
+		} else {
+
+			is_apple_caught = true;
+			
+		}
 
 	} //end of OnMouseDown override
 
@@ -115,7 +139,8 @@ public class appletreeuserinterface : Form {
 	} //end of manage_ui
 
 	protected void manage_animation(Object o, ElapsedEventArgs e){
-
+		apple_y++;
+		applecenter_y = ___ + appley;
 	} //end of manage_animation
 
 	protected void update_start_button(Object o, EventArgs e){
