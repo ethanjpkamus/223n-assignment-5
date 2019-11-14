@@ -26,8 +26,8 @@ public class appletreeuserinterface : Form {
 	//variables
 	private int apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
 	private int apple_y = 0;
-	private int applecenter_x = 0;
-	private int applecenter_y = 0;
+	private int applecenter_x = apple_x + APPLE_RADIUS;
+	private int applecenter_y = apple_y + APPLE_RADIUS;
 	private int mouse_x = 0;
 	private int mouse_y = 0;
 	private int distance = 0;
@@ -143,11 +143,19 @@ public class appletreeuserinterface : Form {
 	} //end of manage_ui
 
 	protected void manage_animation(Object o, ElapsedEventArgs e){
-		apple_y++;
+		apple_y += 2;
 		applecenter_y += appley;
 
 		//check if the ball has touched the bottom of the screen.
+		if((applecenter_x + APPLE_RADIUS) == MAXIMUM_FORM_HEIGHT){
 
+			//move the apple back to the beginning
+			apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
+			apple_y = 0;
+			applecenter_x = apple_x + APPLE_RADIUS;
+			applecenter_y = apple_y + APPLE_RADIUS;
+
+		}
 
 	} //end of manage_animation
 
