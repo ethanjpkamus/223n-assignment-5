@@ -24,7 +24,7 @@ public class appletreeuserinterface : Form {
 	private const int GREENTOP = 500; //y value
 
 	//variables
-	private int apple_x = 0;
+	private int apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
 	private int apple_y = 0;
 	private int applecenter_x = 0;
 	private int applecenter_y = 0;
@@ -104,11 +104,13 @@ public class appletreeuserinterface : Form {
 
 		Graphics graph = e.Graphics;
 
-		graph.FillRectangle(Brushes.Green,0,GREENTOP,500,300);
-		graph.FillRectangle(Brushes.Cyan,0,0,500,500);
+		graph.FillRectangle(Brushes.Green,0,GREENTOP,500,300); //grass
+		graph.FillRectangle(Brushes.Cyan,0,0,500,500); //sky
 
-		graph.FillEllipse(Brushes.Red,apple_x,apple_y,APPLE_RADIUS,APPLE_RADIUS);
-
+		if(animation_clock.Enabled){
+		//only paint the ellipse if the clock is enabled
+			graph.FillEllipse(Brushes.Red,apple_x,apple_y,APPLE_RADIUS,APPLE_RADIUS);
+		}
 		base.OnPaint(e);
 
 	} //end of OnPaint override
@@ -119,15 +121,17 @@ public class appletreeuserinterface : Form {
 		distance = (mouse_x - (applecenter_x + radius*radius))
 		 	  + (mouse_y - (applecenter_y + radius*radius));
 
+		//checks if the click was above the green border
+	  	//and if it was within the circle.
 		if(applecenter_y > (GREENTOP + APPLE_RADIUS*APPLE_RADIUS)
 		   && (distance*distance) < (radius*radius)){
 
 			apples_caught++;
 			is_apple_caught = true;
-		} else {
 
-			is_apple_caught = true;
-			
+			//make new x pos for apple
+			apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
+
 		}
 
 	} //end of OnMouseDown override
@@ -140,11 +144,18 @@ public class appletreeuserinterface : Form {
 
 	protected void manage_animation(Object o, ElapsedEventArgs e){
 		apple_y++;
-		applecenter_y = ___ + appley;
+		applecenter_y += appley;
+
+		//check if the ball has touched the bottom of the screen.
+
+
 	} //end of manage_animation
 
 	protected void update_start_button(Object o, EventArgs e){
-
+		if(animation_clock.Enabled){
+			start_button.Text = "Pause";
+		}
+		start_button.Text = "Resume";
 	} //end of update_start_button
 
 	protected void update_restart_button(Object o, EventArgs e){
