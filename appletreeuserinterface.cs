@@ -33,8 +33,6 @@ public class appletreeuserinterface : Form {
 	private int distance = 0;
 	private int apples_caught = 0;
 
-	private bool is_apple_caught = false;
-
 	//items to be used in the user interface
 	private Button start_button = new Button();
 	private Button restart_button = new Button();
@@ -109,7 +107,7 @@ public class appletreeuserinterface : Form {
 
 		if(animation_clock.Enabled){
 		//only paint the ellipse if the clock is enabled
-			graph.FillEllipse(Brushes.Red,apple_x,apple_y,APPLE_RADIUS,APPLE_RADIUS);
+			graph.FillEllipse(Brushes.Red,apple_x,apple_y,APPLE_RADIUS*2,APPLE_RADIUS*2);
 		}
 		base.OnPaint(e);
 
@@ -123,15 +121,16 @@ public class appletreeuserinterface : Form {
 
 		//checks if the click was above the green border
 	  	//and if it was within the circle.
-		if(applecenter_y > (GREENTOP + APPLE_RADIUS*APPLE_RADIUS)
+		if(applecenter_y > (GREENTOP + APPLE_RADIUS*2)
 		   && (distance*distance) < (radius*radius)){
 
 			apples_caught++;
-			is_apple_caught = true;
+
+			apples_caught_label = "Apples Caught: " + apples_caught.ToString();
 
 			//make new x pos for apple
 			apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
-
+			apple_y = 0;
 		}
 
 	} //end of OnMouseDown override
@@ -143,6 +142,8 @@ public class appletreeuserinterface : Form {
 	} //end of manage_ui
 
 	protected void manage_animation(Object o, ElapsedEventArgs e){
+
+		//increment the position of the apple each time the clock ticks
 		apple_y += 2;
 		applecenter_y += appley;
 
@@ -167,6 +168,16 @@ public class appletreeuserinterface : Form {
 	} //end of update_start_button
 
 	protected void update_restart_button(Object o, EventArgs e){
+
+		//stop the animation
+		animation_clock.Enabled = false;
+
+		//reset the position of the apple
+		apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
+		apple_y = 0;
+
+		apples_caught = 0;
+		apples_caught_label = "Apples Caught: 0";
 
 	} //end of update_restart_button
 
