@@ -27,8 +27,8 @@ public class appletreeuserinterface : Form {
 	//variables
 	private int apple_x = rnd.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
 	private int apple_y = 0;
-	private int applecenter_x;
-	private int applecenter_y;
+	private int applecenter_x = 0;
+	private int applecenter_y = 0;
 	private int mouse_x = 0;
 	private int mouse_y = 0;
 	private int distance = 0;
