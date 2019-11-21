@@ -113,7 +113,7 @@ public class appletreeuserinterface : Form {
 
 	} //end of OnPaint override
 
-	protected override void OnMouseDown(MouseEventsArgs e){
+	protected override void OnMouseDown(MouseEventArgs e){
 		mouse_x = e.X;
 		mouse_y = e.Y;
 		distance = (mouse_x - (applecenter_x + radius*radius))
