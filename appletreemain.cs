@@ -15,12 +15,12 @@ using System.Windows.Forms;
 
 public class appletreemain{
 
-     static void Main(string[] args){
+       static void Main(string[] args){
 
-          System.Console.WriteLine("Welcome to the Main method of the Apple Tree Game.");
-          appletreeuserinterface application = new appletreeuserinterface();
-          Application.Run(application);
-          System.Console.WriteLine("Main method will now shutdown.");
+              System.Console.WriteLine("Welcome to the Main method of the Apple Tree Game.");
+              appletreeuserinterface application = new appletreeuserinterface();
+              Application.Run(application);
+              System.Console.WriteLine("Main method will now shutdown.");
 
      }//End of Main
 

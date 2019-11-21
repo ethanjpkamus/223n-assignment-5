@@ -11,7 +11,7 @@ echo "Compile appletreeuserinterface.cs:"
 mcs -target:library -r:System.Drawing.dll -r:System.Windows.Forms.dll -out:appletreeuserinterface.dll appletreeuserinterface.cs
 
 echo "Compile and link appletreeusermain.cs:"
-mcs -r:System -r:System.Windows.Forms -r:appletreeuserinterface.dll -out:appletree.exe appletreeusermain.cs
+mcs -r:System -r:System.Windows.Forms -r:appletreeuserinterface.dll -out:appletree.exe appletreemain.cs
 
 echo "Run the program Apple Tree Program"
 ./appletree.exe

@@ -23,11 +23,12 @@ public class appletreeuserinterface : Form {
 	private const int APPLE_RADIUS = 20;
 	private const int GREENTOP = 500; //y value
 
+	private static Random rnd = new Random();
 	//variables
-	private int apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
+	private int apple_x = rnd.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
 	private int apple_y = 0;
-	private int applecenter_x = apple_x + APPLE_RADIUS;
-	private int applecenter_y = apple_y + APPLE_RADIUS;
+	private int applecenter_x;
+	private int applecenter_y;
 	private int mouse_x = 0;
 	private int mouse_y = 0;
 	private int distance = 0;
@@ -47,6 +48,9 @@ public class appletreeuserinterface : Form {
 	//constructor
 	public appletreeuserinterface(){
 
+		applecenter_x = apple_x + APPLE_RADIUS;
+		applecenter_y = apple_y + APPLE_RADIUS;
+
 		MaximumSize = new Size(MAXIMUM_FORM_WIDTH,MAXIMUM_FORM_HEIGHT);
 		MinimumSize = new Size(MAXIMUM_FORM_WIDTH,MAXIMUM_FORM_HEIGHT);
 
@@ -61,7 +65,7 @@ public class appletreeuserinterface : Form {
 		ui_clock.AutoReset = true;
 		ui_clock.Elapsed += new ElapsedEventHandler(manage_ui);
 
-		animation_clock.Interval = 16.6; //60 Hz
+		animation_clock.Interval = 16.7; //60 Hz
 		animation_clock.Enabled = false;
 		animation_clock.AutoReset = true;
 		animation_clock.Elapsed += new ElapsedEventHandler(manage_animation);
@@ -74,24 +78,28 @@ public class appletreeuserinterface : Form {
 		restart_button.Text = "RESET";
 		restart_button.Size = new Size(75,30);
 		restart_button.Location = new Point(95,GREENTOP+100);
-		restart_button.Click += new EventHandler(update_restart_button);
+		restart_button.Click += new EventHandler(manage_restart_button);
 
 		quit_button.Text = "QUIT";
 		quit_button.Size = new Size(75,30);
 		quit_button.Location = new Point(180,GREENTOP+100);
-		quit_button.Click = new EventHandler(update_quit_button);
+		quit_button.Click += new EventHandler(manage_quit_button);
 
 		level_label.Text = "Level: 0";
+		level_label.Size = new Size(75,30);
 		level_label.ForeColor = Color.White;
 		level_label.BackColor = Color.Green;
+		level_label.Location = new Point(265,GREENTOP+100);
 
 		apples_caught_label.Text = "Apples Caught: 0";
+		apples_caught_label.Size = new Size(75,30);
 		apples_caught_label.ForeColor = Color.White;
 		apples_caught_label.BackColor = Color.Green;
+		apples_caught_label.Location = new Point(265,GREENTOP+130);
 
 		Controls.Add(start_button);
 		Controls.Add(restart_button);
-		Conrtols.Add(quit_button);
+		Controls.Add(quit_button);
 		Controls.Add(level_label);
 		Controls.Add(apples_caught_label);
 
@@ -111,26 +119,36 @@ public class appletreeuserinterface : Form {
 		}
 		base.OnPaint(e);
 
+		//check when the circle is above the grass and reset if it touches the ground
+		if((apple_y + 2*APPLE_RADIUS) >= GREENTOP){
+			//change level?
+			apples_caught = 0;
+			apples_caught_label.Text = "Apples Caught: 0";
+
+			ResetApplePositions();
+		}
+
+		apples_caught_label.Text = "Apples Caught: " + apples_caught.ToString();
+
 	} //end of OnPaint override
 
 	protected override void OnMouseDown(MouseEventArgs e){
 		mouse_x = e.X;
 		mouse_y = e.Y;
-		distance = (mouse_x - (applecenter_x + radius*radius))
-		 	  + (mouse_y - (applecenter_y + radius*radius));
+		distance = (mouse_x - (applecenter_x + APPLE_RADIUS*APPLE_RADIUS))
+		 	  + (mouse_y - (applecenter_y + APPLE_RADIUS*APPLE_RADIUS));
 
 		//checks if the click was above the green border
 	  	//and if it was within the circle.
 		if(applecenter_y > (GREENTOP + APPLE_RADIUS*2)
-		   && (distance*distance) < (radius*radius)){
+		   && (distance*distance) < (APPLE_RADIUS*APPLE_RADIUS)){
 
 			apples_caught++;
 
-			apples_caught_label = "Apples Caught: " + apples_caught.ToString();
+			//apples_caught_label.Text = "Apples Caught: " + apples_caught.ToString();
 
 			//make new x pos for apple
-			apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
-			apple_y = 0;
+			ResetApplePositions();
 		}
 
 	} //end of OnMouseDown override
@@ -144,15 +162,14 @@ public class appletreeuserinterface : Form {
 	protected void manage_animation(Object o, ElapsedEventArgs e){
 
 		//increment the position of the apple each time the clock ticks
-		apple_y += 2;
-		applecenter_y += appley;
+		apple_y++;
+		applecenter_y++;
 
 		//check if the ball has touched the bottom of the screen.
 		if((applecenter_x + APPLE_RADIUS) == MAXIMUM_FORM_HEIGHT){
 
 			//move the apple back to the beginning
-			apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
-			apple_y = 0;
+			ResetApplePositions();
 			applecenter_x = apple_x + APPLE_RADIUS;
 			applecenter_y = apple_y + APPLE_RADIUS;
 
@@ -160,25 +177,40 @@ public class appletreeuserinterface : Form {
 
 	} //end of manage_animation
 
-	protected void update_start_button(Object o, EventArgs e){
+	protected void manage_start_button(Object o, EventArgs e){
+
+		animation_clock.Enabled = !animation_clock.Enabled;
 		if(animation_clock.Enabled){
 			start_button.Text = "Pause";
 		}
 		start_button.Text = "Resume";
 	} //end of update_start_button
 
-	protected void update_restart_button(Object o, EventArgs e){
+	protected void manage_restart_button(Object o, EventArgs e){
 
 		//stop the animation
 		animation_clock.Enabled = false;
 
 		//reset the position of the apple
-		apple_x = random.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
-		apple_y = 0;
+		ResetApplePositions();
 
 		apples_caught = 0;
-		apples_caught_label = "Apples Caught: 0";
+		apples_caught_label.Text = "Apples Caught: 0";
 
 	} //end of update_restart_button
+
+	protected void manage_quit_button(Object o, EventArgs e){
+
+		Close();
+
+	} //end of update_quit_button
+
+	private void ResetApplePositions(){
+
+		apple_x = rnd.Next(MAXIMUM_FORM_WIDTH - 2*APPLE_RADIUS);
+		apple_y = 0;
+
+	} //end of ResetApplePositions
+
 
 } //end of ricochetballuserinterface implementation
