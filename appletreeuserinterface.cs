@@ -135,8 +135,11 @@ public class appletreeuserinterface : Form {
 	protected override void OnMouseDown(MouseEventArgs e){
 		mouse_x = e.X;
 		mouse_y = e.Y;
-		distance = (mouse_x - (applecenter_x + APPLE_RADIUS*APPLE_RADIUS))
-		 	  + (mouse_y - (applecenter_y + APPLE_RADIUS*APPLE_RADIUS));
+		/* TODO: Find the distance from the center of the circle to the mouse click.
+		 *	  If the value for the calculated distance is greater than the radius,
+		 *	  then the click was not within the circle
+		 */
+		distance = Math.Sqrt();
 
 		//checks if the click was above the green border
 	  	//and if it was within the circle.
