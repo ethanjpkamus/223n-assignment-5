@@ -31,7 +31,7 @@ public class appletreeuserinterface : Form {
 	private int applecenter_y = 0;
 	private int mouse_x = 0;
 	private int mouse_y = 0;
-	private int distance = 0;
+	private double distance = 0;
 	private int apples_caught = 0;
 
 	//items to be used in the user interface
@@ -135,16 +135,20 @@ public class appletreeuserinterface : Form {
 	protected override void OnMouseDown(MouseEventArgs e){
 		mouse_x = e.X;
 		mouse_y = e.Y;
+
+		int center_of_apple_x = applecenter_x;
+		int center_of_apple_y = applecenter_y;
+
 		/* TODO: Find the distance from the center of the circle to the mouse click.
 		 *	  If the value for the calculated distance is greater than the radius,
 		 *	  then the click was not within the circle
 		 */
-		distance = Math.Sqrt();
+		distance = Math.Sqrt( Math.Pow(mouse_x - center_of_apple_x,2)+
+					 Math.Pow(mouse_y - center_of_apple_y,2) );
 
-		//checks if the click was above the green border
+		//checks if the circle was above the green border
 	  	//and if it was within the circle.
-		if(applecenter_y > (GREENTOP + APPLE_RADIUS*2)
-		   && (distance*distance) < (APPLE_RADIUS*APPLE_RADIUS)){
+		if( center_of_apple_y > (GREENTOP + APPLE_RADIUS) && distance <= APPLE_RADIUS ){
 
 			apples_caught++;
 
@@ -169,7 +173,7 @@ public class appletreeuserinterface : Form {
 		applecenter_y++;
 
 		//check if the ball has touched the bottom of the screen.
-		if((applecenter_x + APPLE_RADIUS) == MAXIMUM_FORM_HEIGHT){
+		if((applecenter_y + APPLE_RADIUS) == MAXIMUM_FORM_HEIGHT){
 
 			//move the apple back to the beginning
 			ResetApplePositions();
